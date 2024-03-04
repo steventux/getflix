@@ -1,10 +1,27 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image'
 import Link from 'next/link';
 import Result from '@/app/types/result';
 
+interface ResultItemProps {
+  item: Result;
+  key: number;
+}
+
+function ResultItem({item, key}: ResultItemProps) {
+  const href = item.magnet ? item.magnet : item.torrent;
+  return (
+    <li key={key}>
+      (S-{item.seeders} {item.size})
+      <Link href={href}>{item.name}</Link>
+    </li>
+  );
+}
+
 export default function SearchForm() {
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [results, setResults] = useState({ data: [] });
 
@@ -21,6 +38,7 @@ export default function SearchForm() {
 
   const search = async (event:any) => {
     event.preventDefault();
+    setLoading(true);
 
     const query = event.target.query.value; 
     if (query.length == 0) return;
@@ -29,9 +47,12 @@ export default function SearchForm() {
 
     await fetch(searchUrl)
       .then((res) => { 
-        if (res.status === 200) res.json().then((data) => filterData(data))
+        if (res.status === 200) {
+          setLoading(false);
+          res.json().then((data) => filterData(data))
+        }
       })
-      .catch((err) => { setError(err); });
+      .catch((err) => { setLoading(false); setError(err); });
   }
 
   return (
@@ -42,10 +63,11 @@ export default function SearchForm() {
           <button type="submit">Search</button>
         </div>
       </form>
+      { loading ? (<Image src="/loading-300.gif" height={200} width={200} alt="Loading..." />) : '' }
       { error ? (<p>{error}</p>) : '' }
       <ul>
         {results.data.map((result: Result, idx) => (
-          <li key={idx}>(seeders: {result.seeders}, size: {result.size}) <Link href={result.magnet}>{result.name}</Link></li>
+          <ResultItem item={result} key={idx}/>
         ))}
       </ul>
     </>
