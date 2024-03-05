@@ -24,7 +24,8 @@ export default function SearchForm() {
   const [error, setError] = useState('');
   const [results, setResults] = useState(emptyResults);
 
-  const torrentApiSearchUrl: string = `${process.env.NEXT_PUBLIC_TORRENT_API_BASE_URL}/api/v1/all/search`;
+  const endPoint: string = "/api/v1/all/search";
+  const torrentApiSearchUrl: string = `${process.env.NEXT_PUBLIC_TORRENT_API_BASE_URL}${endPoint}`;
   const categories: string[] = ["Movie", "Television"];
 
   const filterData = (data:any) => {
@@ -35,8 +36,19 @@ export default function SearchForm() {
     setResults(filteredData);
   }
 
+  const resetStates = () => {
+    setError('');
+    setLoading(false);
+    setResults(emptyResults);
+  }
+
+  const searchUrl = (query: string) => {
+    return `${torrentApiSearchUrl}?query=${query}&limit=10`;
+  }
+
   const search = async (event:any) => {
     event.preventDefault();
+    resetStates();
 
     const query = event.target.query.value; 
 
@@ -45,20 +57,19 @@ export default function SearchForm() {
       return;
     }
 
-    setError('');
     setLoading(true);
-    setResults(emptyResults);
 
-    const searchUrl = `${torrentApiSearchUrl}?query=${query}&limit=10`;
-
-    await fetch(searchUrl)
+    await fetch(searchUrl(query))
       .then((res) => { 
         if (res.status === 200) {
           setLoading(false);
           res.json().then((data) => filterData(data))
         }
       })
-      .catch((err) => { setLoading(false); setError(err); });
+      .catch((err) => { 
+        setLoading(false);
+        setError(err); 
+      });
   }
 
   return (
@@ -67,7 +78,9 @@ export default function SearchForm() {
         <div className="p-4">
           <input type="text" name="query" placeholder="The Shining" className="w-full border-2 border-slate-500 bg-slate-50 w-3/4 p-4 mt-10"/>
         </div>
+
         { error ? (<div className="text-red-600 font-bold flex flex-col items-center">{error}</div>) : '' }
+
         <div className="container py-10 px-10 mx-0 min-w-full flex flex-col items-center">
           <button type="submit" className="bg-green-600 text-2xl font-bold text-white px-10 p-4 mx-auto">Search</button>
         </div>
