@@ -1,22 +1,12 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import Image from 'next/image'
-import Link from 'next/link';
 import Result from '@/app/types/result';
-
-interface ResultItemProps {
-  item: Result;
-}
-
-function ResultItem({item}: ResultItemProps) {
-  const href = item.magnet ? item.magnet : item.torrent;
-  return (
-    <li>
-      (S:{item.seeders} {item.size}) <Link href={href} className="underline font-semibold">{item.name}</Link>
-    </li>
-  );
-}
+import filterData from '@/app/lib/filterData';
+import searchUrl from '@/app/lib/searchUrl';
+import Error from '@/app/components/Error';
+import Loading from '@/app/components/Loading';
+import ResultItem from '@/app/components/ResultItem';
 
 export default function SearchForm() {
   const emptyResults = { data: [] };
@@ -24,33 +14,17 @@ export default function SearchForm() {
   const [error, setError] = useState('');
   const [results, setResults] = useState(emptyResults);
 
-  const endPoint: string = "/api/v1/all/search";
-  const torrentApiSearchUrl: string = `${process.env.NEXT_PUBLIC_TORRENT_API_BASE_URL}${endPoint}`;
-  const categories: string[] = ["Movie", "Television"];
-
-  const filterData = (data:any) => {
-    const filteredData = {
-      data: data.data.filter((d: Result) => categories.includes(d.category))
-                      .toSorted((a: Result, b: Result) => Number(b.seeders) - Number(a.seeders))
-    };
-    setResults(filteredData);
-  }
-
   const resetStates = () => {
     setError('');
     setLoading(false);
     setResults(emptyResults);
   }
 
-  const searchUrl = (query: string) => {
-    return `${torrentApiSearchUrl}?query=${query}&limit=10`;
-  }
-
-  const search = async (event:any) => {
+  const search = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     resetStates();
 
-    const query = event.target.query.value; 
+    const query = (event.target as HTMLFormElement).query.value; 
 
     if (query.length == 0) {
       setError('Enter something!')
@@ -63,7 +37,7 @@ export default function SearchForm() {
       .then((res) => { 
         if (res.status === 200) {
           setLoading(false);
-          res.json().then((data) => filterData(data))
+          res.json().then((data) => setResults(filterData(data)))
         }
       })
       .catch((err) => { 
@@ -79,18 +53,14 @@ export default function SearchForm() {
           <input type="text" name="query" placeholder="The Shining" className="w-full border-2 border-slate-500 bg-slate-50 w-3/4 p-4 mt-10"/>
         </div>
 
-        { error ? (<div className="text-red-600 font-bold flex flex-col items-center">{error}</div>) : '' }
+        { error ? (<Error message={error}/>) : '' }
 
         <div className="container py-10 px-10 mx-0 min-w-full flex flex-col items-center">
           <button type="submit" className="bg-green-600 text-2xl font-bold text-white px-10 p-4 mx-auto">Search</button>
         </div>
       </form>
 
-      { loading ? (
-        <div className="flex flex-col items-center">
-          <Image src="/loading-300.gif" height={200} width={200} alt="Loading..." />
-        </div>
-      ) : '' }
+      { loading ? (<Loading/>) : '' }
 
       <ul>
         {results.data.map((result: Result, idx) => (
