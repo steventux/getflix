@@ -2,6 +2,9 @@
 
 A NextJS search form that can be used with [Torrent-Api-py](https://github.com/Ryuk-me/Torrent-Api-py)
 
+![image](https://github.com/steventux/getflix/assets/93511/53abcfe3-aac2-4b02-8e44-2ceaa399e14f)
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
