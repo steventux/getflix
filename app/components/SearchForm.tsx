@@ -42,7 +42,7 @@ export default function SearchForm() {
       })
       .catch((err) => { 
         setLoading(false);
-        setError(err); 
+        setError(err.message);
       });
   }
 
