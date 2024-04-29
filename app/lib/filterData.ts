@@ -1,6 +1,6 @@
 import Result from '@/app/types/result'
 
-const categories = ['TV', 'Television', 'Movie'];
+const categories = ['TV', 'Television', 'Movie', 'Other/Video'];
 
 export default function filterData(data: { data: any }) {
   return {
