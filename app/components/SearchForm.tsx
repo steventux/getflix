@@ -7,6 +7,7 @@ import filterData from '@/app/lib/filterData';
 import searchUrl from '@/app/lib/searchUrl';
 import Error from '@/app/components/Error';
 import Loading from '@/app/components/Loading';
+import SearchButton from '@/app/components/SearchButton';
 
 export default function SearchForm() {
   const emptyResults = { data: [] };
@@ -62,16 +63,12 @@ export default function SearchForm() {
 
         { error ? (<Error message={error}/>) : '' }
 
-        <div className="container py-10 px-10 mx-0 min-w-full flex flex-col items-center">
-          <button type="submit" className="bg-green-600 text-2xl font-bold text-white px-10 p-4 mx-auto">Search</button>
-        </div>
+        { loading ? (<Loading/>) : (<SearchButton/>) }
 
         <div className="container min-w-full flex flex-col items-center">
           <a href={process.env.NEXT_PUBLIC_DELUGE_WEBUI || 'http://localhost:8112'} className="font-semibold text-xl" target="_blank">Deluge</a>
         </div>
       </form>
-
-      { loading ? (<Loading/>) : '' }
 
       <ul>
         {results.data.map((result: Result, idx) => (
