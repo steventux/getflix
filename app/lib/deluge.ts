@@ -1,7 +1,5 @@
 "use server"
 
-import Torrent from '@/app/types/torrent'
-
 const delugeUrl = process.env.NEXT_PUBLIC_DELUGE_URL || 'http://localhost:8112/json';
 const delugePath = process.env.NEXT_PUBLIC_DELUGE_PATH || 'json';
 const password = process.env.NEXT_PUBLIC_DELUGE_PASS || 'deluge';
@@ -18,19 +16,6 @@ const connect = async () => {
   })
 }
 
-const getQueue = (): Promise<Torrent[]> => {
-  return new Promise((resolve) => {
-    deluge.getTorrentRecord((err: any, result: any) => {
-      if (err) {
-        console.error(err);
-        resolve([]);
-      } else {
-        resolve(Object.values(result.torrents).filter((t: any) => t.state === "Downloading"));
-      }
-    });
-  });
-}
-
 const addTorrent = async (url: string) => {
   connect();
   deluge.add(url, delugePath, (err: any, result: any) => {
@@ -38,4 +23,4 @@ const addTorrent = async (url: string) => {
   })
 }
 
-export { addTorrent, getQueue }
+export { addTorrent }
