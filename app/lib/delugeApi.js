@@ -1,7 +1,6 @@
 (function () {
     'use strict';
     var path = require('path');
-    var restler = require('restler');
     var validUrl = require('valid-url');
 
     var connected = false;
@@ -131,6 +130,7 @@
                 isConnected(function (error, result) {
                     if (error || !result) {
                         console.error("[Deluge] WebUI not connected to a daemon");
+                        console.error(error);
                         return;
                     }
                     callback(error, result);
@@ -254,7 +254,7 @@
             }]]
         }, callback);
     }
-
+/*
     function post(body, callback) {
         body.id = ++msgId;
         if (msgId > 1024) {
@@ -269,12 +269,37 @@
                 decodeServerResponse(result, callback, response);
             });
     }
+*/
+    async function post(data, callback) {
+      data.id = ++msgId;
+      if (msgId > 1024) msgId = 0;
+
+      try {
+        const response = await fetch(DELUGE_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Cookie': SESSION_COOKIE,
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const responseData = await response.json();
+        decodeServerResponse(responseData, callback, response);
+      } catch (error) {
+        throw new Error('Error making POST request:', error.message);
+      }
+    }
 
     function getCookie(headers) {
         var cookie;
 
-        if (headers && headers['set-cookie']) {
-            cookie = headers['set-cookie'][0].split(';')[0];
+        if (headers && headers.get('set-cookie')) {
+          cookie = headers.get('set-cookie').split(';')[0];
         }
 
         return cookie;
@@ -340,5 +365,4 @@
             ], {}]
         }, callback);
     }
-
 })();
