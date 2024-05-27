@@ -25,7 +25,8 @@ export default function SearchForm() {
     event.preventDefault();
     resetStates();
 
-    const query = (event.target as HTMLFormElement).query.value; 
+    const queryField = (event.target as HTMLFormElement).elements.namedItem('query') as HTMLInputElement;
+    const query = queryField.value; 
 
     if (query.length == 0) {
       setError('Enter something!')
