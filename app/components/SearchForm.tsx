@@ -1,8 +1,10 @@
 "use client";
-import { useState } from 'react';
+import { useState, useReducer } from 'react';
 import Link from 'next/link';
 import { addTorrent } from '@/app/lib/deluge';
 import Result from '@/app/types/result';
+import ResultsData from '@/app/types/resultsData';
+import { resultsReducer, initialResultsState } from '@/app/lib/resultsReducer';
 import filterData from '@/app/lib/filterData';
 import searchUrl from '@/app/lib/searchUrl';
 import Error from '@/app/components/Error';
@@ -13,12 +15,15 @@ export default function SearchForm() {
   const emptyResults = { data: [] };
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState(emptyResults);
+  const [results, dispatch] = useReducer(
+    resultsReducer,
+    initialResultsState
+  );
 
   const resetStates = () => {
     setError('');
     setLoading(false);
-    setResults(emptyResults);
+    dispatch({ type: "SET_RESULTS", payload: initialResultsState });
   }
 
   const search = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -39,7 +44,9 @@ export default function SearchForm() {
       .then((res) => { 
         if (res.status === 200) {
           setLoading(false);
-          res.json().then((data) => setResults(filterData(data)))
+          res.json().then((data) => {
+            dispatch({ type: "SET_RESULTS", payload: filterData(data) })
+          })
         }
       })
       .catch((err) => { 
@@ -72,7 +79,7 @@ export default function SearchForm() {
       </form>
 
       <ul>
-        {results.data.map((result: Result, idx) => (
+        {results.data.map((result: Result, idx: number) => (
           <li key={idx}>
             ({result.seeders} {result.size}) <Link href={result.magnet || result.torrent} onClick={enqueue} className="underline font-semibold">{result.name}</Link>
           </li>
