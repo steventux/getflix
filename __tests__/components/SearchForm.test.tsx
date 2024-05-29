@@ -1,20 +1,17 @@
-import { expect, test, vi } from 'vitest'
+import { beforeAll, expect, test, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import SearchForm from '@/app/components/SearchForm'
+import { addTorrent } from '@/app/lib/deluge'
 
-function searchResponse() {
-  return { 
-    data: [
-      { 
-        name: 'Apocalypse Now',
-        magnet: 'magnet:?xt=urn:sha1:YNCKHTQCWBTRNJIV4WNAE52SJUQCZO5C&dn=some+file.txt',
-        seeders: 125,
-        size: '1.7GB',
-        category: 'Movie'
-      }
-    ] 
-  } 
+const searchResult = {
+  name: 'Apocalypse Now',
+  magnet: 'magnet:?xt=urn:sha1:YNCKHTQCWBTRNJIV4WNAE52SJUQCZO5C&dn=some+file.txt',
+  seeders: 125,
+  size: '1.7GB',
+  category: 'Movie'
 }
+
+const searchResponse = vi.fn()
 
 global.fetch = vi.fn(() =>
   Promise.resolve({
@@ -25,22 +22,37 @@ global.fetch = vi.fn(() =>
   })
 )
 
-test('SearchForm search', async () => {
-  render(<SearchForm />)
+vi.mock('@/app/lib/deluge', () => {
+  return {
+    addTorrent: vi.fn(),
+  }
+})
 
+beforeAll(() => {
+  render(<SearchForm />)
+})
+
+test('SearchForm renders', () => {
   const searchBox = screen.getByPlaceholderText('The Shining')
   const button = screen.getByRole('button', { name: 'Search' })
-
   expect(searchBox).toBeDefined()
   expect(button).toBeDefined()
   expect(screen.getByRole('link', { name: 'Deluge' })).toBeDefined()
+})
 
+test('SearchForm notifies when no query is entered', () => {
+  const button = screen.getByRole('button', { name: 'Search' })
   fireEvent.click(button)
 
   expect(screen.getByText(/Enter something/i)).toBeDefined()
+})
+
+test('SearchForm search results are rendered', async () => {
+  const searchBox = screen.getByPlaceholderText('The Shining')
+  const button = screen.getByRole('button', { name: 'Search' })
+  searchResponse.mockReturnValue({ data: [searchResult]})
 
   fireEvent.change(searchBox, { target: { value: 'Apocalypse Now' } })
-
   fireEvent.click(button)
 
   expect(screen.getByRole('img', { name: 'Loading...' })).toBeDefined()
@@ -49,4 +61,19 @@ test('SearchForm search', async () => {
 
   expect(fetch).toHaveBeenCalledTimes(1)
   expect(screen.findByRole('link', { name: 'Apocalypse Now' })).toBeDefined()
+
+  fireEvent.click(await screen.findByRole('link', { name: 'Apocalypse Now' }))
+  expect(addTorrent).toHaveBeenCalledTimes(1)
+  expect(addTorrent).toHaveBeenCalledWith(searchResult.magnet)
+})
+
+test('SearchForm notifies of no results', async () => {
+  const searchBox = screen.getByPlaceholderText('The Shining')
+  const button = screen.getByRole('button', { name: 'Search' })
+  searchResponse.mockReturnValue({ data: [] })
+
+  fireEvent.change(searchBox, { target: { value: 'Some obscure film' } })
+  fireEvent.click(button)
+
+  expect(screen.getByText(/No results found/i)).toBeDefined()
 })
