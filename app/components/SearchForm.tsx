@@ -1,23 +1,15 @@
 "use client";
 import { useReducer } from 'react';
-import Link from 'next/link';
-import { addTorrent } from '@/app/lib/deluge';
-import Result from '@/app/types/result';
 import { reducer, initialState } from '@/app/lib/reducer';
+import { search } from '@/app/lib/search';
+import DelugeLink from '@/app/components/DelugeLink';
 import Error from '@/app/components/Error';
 import Loading from '@/app/components/Loading';
+import Results from '@/app/components/Results';
 import SearchButton from '@/app/components/SearchButton';
-import { search } from '@/app/lib/search';
 
 export default function SearchForm() {
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  const enqueue = (event: any) => {
-    event.preventDefault();
-    
-    const link = event.target as HTMLLinkElement;
-    addTorrent(link.href);   
-  };
 
   return (
     <>
@@ -30,18 +22,10 @@ export default function SearchForm() {
 
         { state.loading ? (<Loading/>) : (<SearchButton/>) }
 
-        <div className="container min-w-full flex flex-col items-center">
-          <a href={process.env.NEXT_PUBLIC_DELUGE_WEBUI || 'http://localhost:8112'} className="font-semibold text-xl" target="_blank">Deluge</a>
-        </div>
+        <DelugeLink/>
       </form>
 
-      <ul>
-        {state.results.data.map((result: Result, idx: number) => (
-          <li key={idx}>
-            ({result.seeders} {result.size}) <Link href={result.magnet || result.torrent} onClick={enqueue} className="underline font-semibold">{result.name}</Link>
-          </li>
-        ))}
-      </ul>
+      <Results results={state.results}/>
     </>
   );
 }
