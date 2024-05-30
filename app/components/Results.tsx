@@ -21,13 +21,12 @@ export default function Results({results}: {results: ResultsData}) {
   }
 
   return (
-    (results.data.length === 0) ? <p>No results found</p> :
-      <ul>
-        {results.data.map((result: Result, idx: number) => (
-          <li key={idx}>
-            {resultMeta(result)} <Link href={resultLink(result)} onClick={enqueue} className="underline font-semibold">{result.name}</Link>
-          </li>
-        ))}
-      </ul>
+    <ul>
+      {results.data.map((result: Result, idx: number) => (
+        <li key={idx}>
+          {resultMeta(result)} <Link href={resultLink(result)} onClick={enqueue} className="underline font-semibold">{result.name}</Link>
+        </li>
+      ))}
+    </ul>
   );
 }

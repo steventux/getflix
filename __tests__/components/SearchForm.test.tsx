@@ -11,11 +11,12 @@ const searchResult = {
   category: 'Movie'
 }
 
+const status = vi.fn()
 const searchResponse = vi.fn()
 
 global.fetch = vi.fn(() =>
   Promise.resolve({
-    status: 200,
+    status: status(),
     json: () => {
       return Promise.resolve(searchResponse());
     },
@@ -50,6 +51,7 @@ test('SearchForm notifies when no query is entered', () => {
 test('SearchForm search results are rendered', async () => {
   const searchBox = screen.getByPlaceholderText('The Shining')
   const button = screen.getByRole('button', { name: 'Search' })
+  status.mockReturnValue(200)
   searchResponse.mockReturnValue({ data: [searchResult]})
 
   fireEvent.change(searchBox, { target: { value: 'Apocalypse Now' } })
@@ -70,10 +72,11 @@ test('SearchForm search results are rendered', async () => {
 test('SearchForm notifies of no results', async () => {
   const searchBox = screen.getByPlaceholderText('The Shining')
   const button = screen.getByRole('button', { name: 'Search' })
-  searchResponse.mockReturnValue({ data: [] })
+  status.mockReturnValue(404)
+  searchResponse.mockReturnValue({ error: 'Result Not Found' })
 
   fireEvent.change(searchBox, { target: { value: 'Some obscure film' } })
   fireEvent.click(button)
 
-  expect(screen.getByText(/No results found/i)).toBeDefined()
+  expect(screen.findByText(/No results found/i)).toBeDefined()
 })

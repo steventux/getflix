@@ -12,11 +12,11 @@ const searchUrl = (query: string) => {
 }
 
 const filterData = (data: { data: any }) => {
-  return {
-    data: data.data.filter((d: Result) => categories.includes(d.category))
-                   .filter((d: Result) => Number(d.seeders) > 0)
-                   .toSorted((a: Result, b: Result) => Number(b.seeders) - Number(a.seeders))
-  };
+  const filteredData = data.data.filter((d: Result) => categories.includes(d.category))
+                                .filter((d: Result) => Number(d.seeders) > 0)
+                                .sort((a: Result, b: Result) => Number(b.seeders) - Number(a.seeders));
+
+  return { data: filteredData };
 }
 
 const search = async (event: React.FormEvent<HTMLFormElement>, dispatch: Function) => {
@@ -35,6 +35,9 @@ const search = async (event: React.FormEvent<HTMLFormElement>, dispatch: Functio
 
   await fetch(searchUrl(query))
     .then((res) => {
+      if (res.status === 404) {
+        dispatch({ type: ReducerActionType.SET_ERROR, payload: 'No results found' });
+      }
       if (res.status === 200) {
         dispatch({ type: ReducerActionType.SET_LOADING, payload: false });
         res.json().then((data) => {
