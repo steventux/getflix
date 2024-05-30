@@ -4,14 +4,17 @@ export enum ReducerActionType {
   SET_RESULTS = 'SET_RESULTS',
   RESET = 'RESET',
   SET_ERROR = 'SET_ERROR',
-  SET_LOADING = 'SET_LOADING'
+  SET_LOADING = 'SET_LOADING',
+  ADD_TO_QUEUE = 'ADD_TO_QUEUE'
 };
+export type State = { results: ResultsData, error: string, loading: boolean };
+
 type ResultsData = { data: Result[] };
 type ReducerAction = { type: ReducerActionType.SET_RESULTS, payload: ResultsData } |
                      { type: ReducerActionType.SET_ERROR, payload: string } |
                      { type: ReducerActionType.SET_LOADING, payload: boolean } |
+                     { type: ReducerActionType.ADD_TO_QUEUE, payload: number } |
                      { type: ReducerActionType.RESET };
-export type State = { results: ResultsData, error: string, loading: boolean };
 
 const reducer = (state = initialState, action: ReducerAction) => {
   switch (action.type) {
@@ -40,6 +43,16 @@ const reducer = (state = initialState, action: ReducerAction) => {
         results: initialResultsState,
         error: '',
         loading: action.payload,
+      };
+
+    case ReducerActionType.ADD_TO_QUEUE:
+      const results = state.results.data.filter((r, index) => index !== action.payload);
+
+      return {
+        ...state,
+        results: { data: results },
+        error: '',
+        loading: false,
       };
 
     default:

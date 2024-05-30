@@ -2,14 +2,16 @@ import Result from '@/app/types/result';
 import ResultsData from '@/app/types/resultsData';
 import Link from 'next/link';
 import { addTorrent } from '@/app/lib/deluge';
+import { ReducerActionType } from '@/app/lib/reducer';
 
 
-export default function Results({results}: {results: ResultsData}) {
-  const enqueue = (event: any) => {
+export default function Results({results, dispatch}: {results: ResultsData, dispatch: Function}) {
+  const enqueue = (event: any, idx: number) => {
     event.preventDefault();
     
     const link = event.target as HTMLLinkElement;
-    addTorrent(link.href);   
+    addTorrent(link.href);
+    dispatch({ type: ReducerActionType.ADD_TO_QUEUE, payload: idx });
   };
 
   const resultMeta = (result: Result) => {
@@ -24,7 +26,7 @@ export default function Results({results}: {results: ResultsData}) {
     <ul>
       {results.data.map((result: Result, idx: number) => (
         <li key={idx}>
-          {resultMeta(result)} <Link href={resultLink(result)} onClick={enqueue} className="underline font-semibold">{result.name}</Link>
+          {resultMeta(result)} <Link href={resultLink(result)} onClick={(e) => enqueue(e, idx)} className="underline font-semibold">{result.name}</Link>
         </li>
       ))}
     </ul>

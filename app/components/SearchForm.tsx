@@ -25,7 +25,7 @@ export default function SearchForm() {
         <DelugeLink/>
       </form>
 
-      <Results results={state.results}/>
+      <Results results={state.results} dispatch={dispatch} />
     </>
   );
 }

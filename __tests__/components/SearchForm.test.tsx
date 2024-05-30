@@ -3,13 +3,22 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import SearchForm from '@/app/components/SearchForm'
 import { addTorrent } from '@/app/lib/deluge'
 
-const searchResult = {
-  name: 'Apocalypse Now',
-  magnet: 'magnet:?xt=urn:sha1:YNCKHTQCWBTRNJIV4WNAE52SJUQCZO5C&dn=some+file.txt',
-  seeders: 125,
-  size: '1.7GB',
-  category: 'Movie'
-}
+const searchResults = [
+  {
+    name: 'Apocalypse Now',
+    magnet: 'magnet:?xt=urn:sha1:YNCKHTQCWBTRNJIV4WNAE52SJUQCZO5C&dn=some+file.txt',
+    seeders: 125,
+    size: '1.7GB',
+    category: 'Movie'
+  },
+  {
+    name: 'Apocalypse Nowadays',
+    magnet: 'magnet:?xt=urn:sha1:AQCKHTQCWBTRNJIV4WNAE52SJUQCZO5C&dn=some+other+file.txt',
+    seeders: 2,
+    size: '3.5GB',
+    category: 'Movie'
+  }
+]
 
 const status = vi.fn()
 const searchResponse = vi.fn()
@@ -52,7 +61,7 @@ test('SearchForm search results are rendered', async () => {
   const searchBox = screen.getByPlaceholderText('The Shining')
   const button = screen.getByRole('button', { name: 'Search' })
   status.mockReturnValue(200)
-  searchResponse.mockReturnValue({ data: [searchResult]})
+  searchResponse.mockReturnValue({ data: searchResults})
 
   fireEvent.change(searchBox, { target: { value: 'Apocalypse Now' } })
   fireEvent.click(button)
@@ -63,10 +72,13 @@ test('SearchForm search results are rendered', async () => {
 
   expect(fetch).toHaveBeenCalledTimes(1)
   expect(screen.findByRole('link', { name: 'Apocalypse Now' })).toBeDefined()
+  expect(screen.findByRole('link', { name: 'Apocalypse Nowadays' })).toBeDefined()
 
   fireEvent.click(await screen.findByRole('link', { name: 'Apocalypse Now' }))
   expect(addTorrent).toHaveBeenCalledTimes(1)
-  expect(addTorrent).toHaveBeenCalledWith(searchResult.magnet)
+  expect(addTorrent).toHaveBeenCalledWith(searchResults[0].magnet)
+  expect(screen.queryByText('Apocalypse Now')).toBeNull()
+  expect(screen.findByRole('link', { name: 'Apocalypse Nowadays' })).toBeDefined()
 })
 
 test('SearchForm notifies of no results', async () => {
