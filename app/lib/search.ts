@@ -1,6 +1,7 @@
 import { useReducer } from 'react';
 import { reducer, initialState, ReducerActionType } from '@/app/lib/reducer';
 import Result from '@/app/types/result'
+import { FlashType } from '@/app/lib/flash';
 
 const baseUrl = process.env.NEXT_PUBLIC_TORRENT_API_BASE_URL || 'http://localhost:8009';
 const endPoint: string = "/api/v1/all/search";
@@ -27,7 +28,7 @@ const search = async (event: React.FormEvent<HTMLFormElement>, dispatch: Functio
   const query = queryField.value;
 
   if (query.length == 0) {
-    dispatch({ type: ReducerActionType.SET_ERROR, payload: 'Enter something!' });
+    dispatch({ type: ReducerActionType.SET_FLASH, payload: { type: FlashType.ERROR, message: 'Enter something!' } });
     return;
   }
 
@@ -36,7 +37,7 @@ const search = async (event: React.FormEvent<HTMLFormElement>, dispatch: Functio
   await fetch(searchUrl(query))
     .then((res) => {
       if (res.status === 404) {
-        dispatch({ type: ReducerActionType.SET_ERROR, payload: 'No results found' });
+        dispatch({ type: ReducerActionType.SET_FLASH, payload: { type: FlashType.ERROR, message: 'No results found' } });
       }
       if (res.status === 200) {
         dispatch({ type: ReducerActionType.SET_LOADING, payload: false });
@@ -46,7 +47,7 @@ const search = async (event: React.FormEvent<HTMLFormElement>, dispatch: Functio
       }
     })
     .catch((err) => {
-      dispatch({ type: ReducerActionType.SET_ERROR, payload: err.message });
+      dispatch({ type: ReducerActionType.SET_FLASH, payload: { type: FlashType.ERROR, message: err.message } });
     });
 }
 

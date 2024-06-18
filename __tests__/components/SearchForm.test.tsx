@@ -77,6 +77,7 @@ test('SearchForm search results are rendered', async () => {
   fireEvent.click(await screen.findByRole('link', { name: 'Apocalypse Now' }))
   expect(addTorrent).toHaveBeenCalledTimes(1)
   expect(addTorrent).toHaveBeenCalledWith(searchResults[0].magnet)
+  expect(screen.getByText(/Torrent added to queue/i)).toBeDefined()
   expect(screen.queryByText('Apocalypse Now')).toBeNull()
   expect(screen.findByRole('link', { name: 'Apocalypse Nowadays' })).toBeDefined()
 })
