@@ -254,22 +254,7 @@
             }]]
         }, callback);
     }
-/*
-    function post(body, callback) {
-        body.id = ++msgId;
-        if (msgId > 1024) {
-            msgId = 0;
-        }
-        restler.postJson(DELUGE_URL, body, {
-            headers: {
-                'Cookie': SESSION_COOKIE
-            }
-        })
-            .on('success', function (result, response) {
-                decodeServerResponse(result, callback, response);
-            });
-    }
-*/
+
     async function post(data, callback) {
       data.id = ++msgId;
       if (msgId > 1024) msgId = 0;
