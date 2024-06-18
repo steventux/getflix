@@ -23,12 +23,16 @@ export default function Results({results, dispatch}: {results: ResultsData, disp
   }
 
   return (
-    <ul>
-      {results.data.map((result: Result, idx: number) => (
-        <li key={idx}>
-          {resultMeta(result)} <Link href={resultLink(result)} onClick={(e) => enqueue(e, idx)} className="underline font-semibold">{result.name}</Link>
-        </li>
-      ))}
-    </ul>
+    <div className="flex flex-col items-center justify-center">
+      {results.data?.length > 0 && (
+        <ul>
+          {results.data.map((result: Result, idx: number) => (
+            <li key={idx}>
+              {resultMeta(result)} <Link href={resultLink(result)} onClick={(e) => enqueue(e, idx)} className="underline font-semibold">{result.name}</Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
