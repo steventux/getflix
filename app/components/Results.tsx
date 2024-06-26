@@ -12,6 +12,10 @@ export default function Results({results, dispatch}: {results: ResultsData, disp
     const link = event.target as HTMLLinkElement;
     addTorrent(link.href);
     dispatch({ type: ReducerActionType.ADD_TO_QUEUE, payload: idx });
+
+    setTimeout(() => {
+      dispatch({ type: ReducerActionType.SET_FLASH, payload: {} });
+    }, 3000);
   };
 
   const resultMeta = (result: Result) => {
