@@ -5,6 +5,7 @@ import { search } from '@/app/lib/search';
 import DelugeLink from '@/app/components/DelugeLink';
 import Flash from '@/app/components/Flash';
 import Loading from '@/app/components/Loading';
+import Queue from '@/app/components/Queue';
 import Results from '@/app/components/Results';
 import SearchButton from '@/app/components/SearchButton';
 
@@ -21,9 +22,9 @@ export default function SearchForm() {
         { state.flash ? (<Flash flash={state.flash}/>) : '' }
 
         { state.loading ? (<Loading/>) : (<SearchButton/>) }
-
-        <DelugeLink/>
       </form>
+
+      <Queue />
 
       <Results results={state.results} dispatch={dispatch} />
     </>

@@ -1,7 +1,7 @@
 import { beforeAll, expect, test, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import SearchForm from '@/app/components/SearchForm'
-import { addTorrent } from '@/app/lib/deluge'
+import { addTorrent, getTorrents } from '@/app/lib/deluge'
 
 const searchResults = [
   {
@@ -22,6 +22,7 @@ const searchResults = [
 
 const status = vi.fn()
 const searchResponse = vi.fn()
+const getTorrentsResponse = vi.fn()
 
 global.fetch = vi.fn(() =>
   Promise.resolve({
@@ -35,6 +36,7 @@ global.fetch = vi.fn(() =>
 vi.mock('@/app/lib/deluge', () => {
   return {
     addTorrent: vi.fn(),
+    getTorrents: vi.fn(() => Promise.resolve(getTorrentsResponse())),
   }
 })
 
@@ -47,7 +49,6 @@ test('SearchForm renders', () => {
   const button = screen.getByRole('button', { name: 'Search' })
   expect(searchBox).toBeDefined()
   expect(button).toBeDefined()
-  expect(screen.getByRole('link', { name: 'Deluge' })).toBeDefined()
 })
 
 test('SearchForm notifies when no query is entered', () => {
@@ -77,7 +78,7 @@ test('SearchForm search results are rendered', async () => {
   fireEvent.click(await screen.findByRole('link', { name: 'Apocalypse Now' }))
   expect(addTorrent).toHaveBeenCalledTimes(1)
   expect(addTorrent).toHaveBeenCalledWith(searchResults[0].magnet)
-  expect(screen.getByText(/Torrent added to queue/i)).toBeDefined()
+  expect(screen.getByText(/Apocalypse Now added to queue/i)).toBeDefined()
   expect(screen.queryByText('Apocalypse Now')).toBeNull()
   expect(screen.findByRole('link', { name: 'Apocalypse Nowadays' })).toBeDefined()
 })
@@ -93,3 +94,10 @@ test('SearchForm notifies of no results', async () => {
 
   expect(screen.findByText(/No results found/i)).toBeDefined()
 })
+
+test('SearchForm renders queue', async () => {
+  getTorrentsResponse.mockReturnValue({ torrents: { 1: { name: 'Jaws', progress: '33.99999', state: 'Downloading' } } })
+
+  expect(getTorrents).toHaveBeenCalledTimes(1)
+  expect(screen.findByText(/Jaws 34%/i)).toBeDefined()
+});
