@@ -1,6 +1,9 @@
 # getflix
 
-A NextJS search form that can be used with [Torrent-Api-py](https://github.com/Ryuk-me/Torrent-Api-py)
+A NextJS search form that can be used with [Torrent-Api-py](https://github.com/Ryuk-me/Torrent-Api-py) and [Deluge](https://deluge-torrent.org/).
+
+Always consider running Deluge from a VPN connection. See https://github.com/binhex/arch-delugevpn for a container based solution.
+
 
 ![image](https://github.com/steventux/getflix/assets/93511/53abcfe3-aac2-4b02-8e44-2ceaa399e14f)
 
@@ -10,8 +13,15 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 ## Getting Started
 
 
-First, configure .env.local or similar with `NEXT_PUBLIC_TORRENT_API_BASE_URL` pointing to your Torrent-Api-py instance.
+First, configure .env.local or similar with details of your Torrent-Api-py and Deluge services.
 
+```
+NEXT_PUBLIC_TORRENT_API_BASE_URL=http://localhost:8009
+NEXT_PUBLIC_DELUGE_URL=http://localhost:8112/json
+NEXT_PUBLIC_DELUGE_WEBUI=http://localhost:8112/
+NEXT_PUBLIC_DELUGE_PASS=deluge
+NEXT_PUBLIC_DELUGE_PATH=/data/complete
+```
 
 Now you can run the development server:
 
