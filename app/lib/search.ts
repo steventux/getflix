@@ -6,7 +6,7 @@ import { FlashType } from '@/app/lib/flash';
 const baseUrl = process.env.NEXT_PUBLIC_TORRENT_API_BASE_URL || 'http://localhost:8009';
 const endPoint: string = "/api/v1/all/search";
 const torrentApiSearchUrl: string = `${baseUrl}${endPoint}`;
-const categories = ['TV', 'Television', 'Movie', 'Other/Video'];
+const categories = ['TV', 'Television', 'Movie', 'Movies', 'Other/Video'];
 
 const searchUrl = (query: string) => {
   return `${torrentApiSearchUrl}?query=${query}&limit=10`;
