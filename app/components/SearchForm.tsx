@@ -19,10 +19,10 @@ export default function SearchForm() {
           <input type="text" name="query" placeholder="The Shining" className="w-full border-2 border-slate-500 bg-slate-50 w-3/4 p-4 mt-10"/>
         </div>
 
-        { state.flash ? (<Flash flash={state.flash}/>) : '' }
-
         { state.loading ? (<Loading/>) : (<SearchButton/>) }
       </form>
+
+      { state.flash ? (<Flash flash={state.flash}/>) : '' }
 
       <Queue />
 
