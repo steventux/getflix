@@ -1,7 +1,7 @@
 import { beforeAll, expect, test, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import SearchForm from '@/app/components/SearchForm'
-import { addTorrent, getTorrents } from '@/app/lib/deluge'
+import { addTorrent, getTorrents } from '@/app/lib/qbittorrent'
 
 const searchResults = [
   {
@@ -33,7 +33,7 @@ global.fetch = vi.fn(() =>
   })
 )
 
-vi.mock('@/app/lib/deluge', () => {
+vi.mock('@/app/lib/qbittorrent', () => {
   return {
     addTorrent: vi.fn(),
     getTorrents: vi.fn(() => Promise.resolve(getTorrentsResponse())),
