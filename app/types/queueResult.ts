@@ -1,9 +1,8 @@
-import Torrent from "./torrent";
-
 export default interface QueueResult {
-  connected: boolean
-  torrents: TorrentsObject
-}
-interface TorrentsObject {
-  [key: string]: Torrent
+  completion_on: number,
+  hash: string,
+  name: string,
+  progress: number,
+  size: number,
+  state: string,
 }
