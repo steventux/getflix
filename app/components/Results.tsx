@@ -1,7 +1,7 @@
 import Result from '@/app/types/result';
 import ResultsData from '@/app/types/resultsData';
 import Link from 'next/link';
-import { addTorrent } from '@/app/lib/deluge';
+import { addTorrent } from '@/app/lib/qbittorrent';
 import { ReducerActionType } from '@/app/lib/reducer';
 
 
