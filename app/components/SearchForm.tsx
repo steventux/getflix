@@ -2,7 +2,6 @@
 import { useReducer } from 'react';
 import { reducer, initialState } from '@/app/lib/reducer';
 import { search } from '@/app/lib/search';
-import DelugeLink from '@/app/components/DelugeLink';
 import Flash from '@/app/components/Flash';
 import Loading from '@/app/components/Loading';
 import Queue from '@/app/components/Queue';
