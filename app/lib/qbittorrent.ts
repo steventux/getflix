@@ -9,7 +9,7 @@ const qBittorrentPass = process.env.NEXT_PUBLIC_QBITTORRENT_PASS || '81tt0rr3nt'
 const client = new qBittorrentClient(qBittorrentUrl, qBittorrentUser, qBittorrentPass);
 
 const addTorrent = async (url: string) => {
-  await client.torrents.add(url);
+  await client.torrents.add(url, { seedingTimeLimit: 720 });
 }
 
 const getTorrents = async () => {
@@ -17,8 +17,4 @@ const getTorrents = async () => {
   return JSON.stringify(results); 
 }
 
-const stopTorrent = async (hash: string) => {
-  await client.request('/torrents/stop', { hashes : hash });
-}
-
-export { addTorrent, getTorrents, stopTorrent }
+export { addTorrent, getTorrents }
