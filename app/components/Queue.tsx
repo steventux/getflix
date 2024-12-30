@@ -9,7 +9,7 @@ export default function Queue() {
 
   const fetchQueueResults = () => {
     getTorrents().then((rawData) => {
-      const queueResults: QueueResult[] = JSON.parse<QueueResult[]>(rawData);
+      const queueResults: QueueResult[] = JSON.parse(rawData);
       setQueueResults(queueResults);
     }).catch((err) => { console.error(err) });
   }
