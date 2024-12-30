@@ -96,7 +96,7 @@ test('SearchForm notifies of no results', async () => {
 })
 
 test('SearchForm renders queue', async () => {
-  getTorrentsResponse.mockReturnValue({ torrents: { 1: { name: 'Jaws', progress: '33.99999', state: 'Downloading' } } })
+  getTorrentsResponse.mockReturnValue([{ name: 'Jaws', progress: '0.33999', state: 'downloading' }])
 
   expect(getTorrents).toHaveBeenCalledTimes(1)
   expect(screen.findByText(/Jaws 34%/i)).toBeDefined()
