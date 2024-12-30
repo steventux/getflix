@@ -11,7 +11,7 @@ export default function Queue() {
     getTorrents().then((rawData) => {
       const rawQueueResults: QueueResult[] = JSON.parse(rawData);
       const filteredQueueResults = rawQueueResults.filter((result: QueueResult) => {
-        ['downloading', 'completed'].includes(result.state);
+        return ['completed', 'downloading', 'stalledUP'].includes(result.state);
       });
       setQueueResults(filteredQueueResults);
     }).catch((err) => { console.error(err) });
