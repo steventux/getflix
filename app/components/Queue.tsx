@@ -11,7 +11,7 @@ export default function Queue() {
     getTorrents().then((rawData) => {
       const queueResults: QueueResult[] = JSON.parse<QueueResult[]>(rawData);
       setQueueResults(queueResults);
-    });
+    }).catch((err) => { console.error(err) });
   }
 
   useEffect(() => {
