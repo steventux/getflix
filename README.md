@@ -16,7 +16,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 First, configure .env.local or similar with details of your Torrent-Api-py and QBittorrent services.
 
 ```
-NEXT_PUBLIC_TORRENT_API_BASE_URL=http://localhost:8009
+NEXT_PUBLIC_API_URL=http://localhost:3000
+NEXT_PUBLIC_SERVER_URL=http://localhost:3000
 NEXT_PUBLIC_QBITTORRENT_URL=http://localhost:8080
 NEXT_PUBLIC_QBITTORRENT_USER=admin
 NEXT_PUBLIC_QBITTORRENT_PASS=adminadmin
