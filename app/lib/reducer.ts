@@ -9,10 +9,9 @@ export enum ReducerActionType {
   ADD_TO_QUEUE = 'ADD_TO_QUEUE'
 };
 
-export type State = { results: ResultsData, flash: Flash, loading: boolean };
+export type State = { results: Result[], flash: Flash, loading: boolean };
 
-type ResultsData = { data: Result[] };
-type ReducerAction = { type: ReducerActionType.SET_RESULTS, payload: ResultsData } |
+type ReducerAction = { type: ReducerActionType.SET_RESULTS, payload: Result[] } |
                      { type: ReducerActionType.SET_FLASH, payload: Flash } |
                      { type: ReducerActionType.SET_LOADING, payload: boolean } |
                      { type: ReducerActionType.ADD_TO_QUEUE, payload: number } |
@@ -48,13 +47,13 @@ const reducer = (state = initialState, action: ReducerAction) => {
       };
 
     case ReducerActionType.ADD_TO_QUEUE:
-      const results = state.results.data.filter((r, index) => index !== action.payload);
-      const result = state.results.data[action.payload];
+      const results = state.results.filter((r, index) => index !== action.payload);
+      const result = state.results[action.payload];
 
       return {
         ...state,
-        results: { data: results },
-        flash: { type: FlashType.MESSAGE, message: `${result.name} added to queue` },
+        results: results,
+        flash: { type: FlashType.MESSAGE, message: `${result.fileName} added to queue` },
         loading: false,
       };
 
@@ -63,7 +62,7 @@ const reducer = (state = initialState, action: ReducerAction) => {
   }
 }
 
-const initialResultsState: ResultsData = { data: [] };
+const initialResultsState: Result[] = [];
 const initialFlashState: Flash = {};
 
 const initialState: State = {

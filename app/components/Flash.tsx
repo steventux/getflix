@@ -1,4 +1,4 @@
-import { Flash } from '@/app/lib/flash';
+import type { Flash } from '@/app/lib/flash';
 
 interface FlashProps {
   flash: Flash;

@@ -1,13 +1,9 @@
 export default interface Result {
-  name: string,
-  size: string,
-  date: string,
-  seeders: number,
-  leachers: number,
-  url: string,
-  poster: string,
-  torrent: string,
-  magnet: string,
-  hash: string,
-  category: string
+  descrLink: string,
+  fileName: string,
+  fileSize: number,
+  fileUrl: string,
+  nbLeechers: number,
+  nbSeeders: number,
+  siteUrl: string
 }

@@ -1,11 +1,10 @@
 import Result from '@/app/types/result';
-import ResultsData from '@/app/types/resultsData';
 import Link from 'next/link';
 import { addTorrent } from '@/app/lib/qbittorrent';
 import { ReducerActionType } from '@/app/lib/reducer';
+import { bytesToSize } from '@/app/lib/bytestosize';
 
-
-export default function Results({results, dispatch}: {results: ResultsData, dispatch: Function}) {
+export default function Results({results, dispatch}: {results: Result[], dispatch: Function}) {
   const enqueue = (event: any, idx: number) => {
     event.preventDefault();
     
@@ -19,20 +18,16 @@ export default function Results({results, dispatch}: {results: ResultsData, disp
   };
 
   const resultMeta = (result: Result) => {
-    return `(${result.seeders} ${result.size})`;
-  }
-
-  const resultLink = (result: Result) => {
-    return result.magnet || result.torrent;
+    return `(${result.nbSeeders} ${bytesToSize(result.fileSize)})`;
   }
 
   return (
     <div className="flex flex-col items-center justify-center">
-      {results.data?.length > 0 && (
+      {results.length > 0 && (
         <ul>
-          {results.data.map((result: Result, idx: number) => (
+          {results.map((result: Result, idx: number) => (
             <li key={idx}>
-              {resultMeta(result)} <Link href={resultLink(result)} onClick={(e) => enqueue(e, idx)} className="underline font-semibold">{result.name}</Link>
+              {resultMeta(result)} <Link href={result.fileUrl} onClick={(e) => enqueue(e, idx)} className="underline font-semibold">{result.fileName}</Link>
             </li>
           ))}
         </ul>

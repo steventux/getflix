@@ -1,8 +1,8 @@
 # getflix
 
-A NextJS search form that can be used with [Torrent-Api-py](https://github.com/Ryuk-me/Torrent-Api-py) and [QBittorrent](https://www.qbittorrent.org/).
+A NextJS search form that can be used with [QBittorrent](https://www.qbittorrent.org/).
 
-Always consider running QBittorrent from a VPN connection. See https://github.com/binhex/arch-qbittorrentvpn for a containerised solution.
+Always run QBittorrent from a VPN connection. See https://github.com/binhex/arch-qbittorrentvpn for a docker container with QBittorrent and VPN network.
 
 
 ![image](https://github.com/steventux/getflix/assets/93511/53abcfe3-aac2-4b02-8e44-2ceaa399e14f)
