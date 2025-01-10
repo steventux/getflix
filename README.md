@@ -49,6 +49,19 @@ docker build -t getflix .
 docker run -p 3000:3000 getflix
 ```
 
+or use docker compose:
+
+```bash
+docker compose --build up
+```
+
+or use the Makefile:
+
+```bash
+make build
+make run
+```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
