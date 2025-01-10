@@ -13,7 +13,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 ## Getting Started
 
 
-First, configure .env.local or similar with details of your Torrent-Api-py and QBittorrent services.
+First, configure .env.local or similar with details of your QBittorrent installation.
 
 ```
 NEXT_PUBLIC_API_URL=http://localhost:3000
@@ -27,15 +27,25 @@ Now you can run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Running the tests
+
+```bash
+npm run test
+```
+
+## Deployment
+
+To deploy this project, you can use the following commands:
+
+```bash
+npm run build
+npm run prod_start
+```
+
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
