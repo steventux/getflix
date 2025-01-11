@@ -2,9 +2,9 @@
 
 import { qBittorrentClient, TorrentAddParameters } from '@robertklep/qbittorrent';
 
-const qBittorrentUrl = process.env.NEXT_PUBLIC_QBITTORRENT_URL || 'http://localhost:8080';
-const qBittorrentUser = process.env.NEXT_PUBLIC_QBITTORRENT_USER || 'admin';
-const qBittorrentPass = process.env.NEXT_PUBLIC_QBITTORRENT_PASS || 'adminadmin';
+const qBittorrentUrl = process.env.QBITTORRENT_URL || 'http://localhost:8080';
+const qBittorrentUser = process.env.QBITTORRENT_USER || 'admin';
+const qBittorrentPass = process.env.QBITTORRENT_PASS || 'adminadmin';
 
 const client = new qBittorrentClient(qBittorrentUrl, qBittorrentUser, qBittorrentPass);
 client.search.updatePlugins();

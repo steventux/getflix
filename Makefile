@@ -4,4 +4,8 @@ build: ## Build the docker image.
 
 .PHONY: run 
 run: ## Start the docker container.
-	docker compose up
+	docker compose up --build
+
+.PHONY: dev
+dev: ## Start the development server.
+	npm run dev

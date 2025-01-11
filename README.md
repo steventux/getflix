@@ -18,9 +18,9 @@ First, configure .env.local or similar with details of your QBittorrent installa
 ```
 NEXT_PUBLIC_API_URL=http://localhost:3000
 NEXT_PUBLIC_SERVER_URL=http://localhost:3000
-NEXT_PUBLIC_QBITTORRENT_URL=http://localhost:8080
-NEXT_PUBLIC_QBITTORRENT_USER=admin
-NEXT_PUBLIC_QBITTORRENT_PASS=adminadmin
+QBITTORRENT_URL=http://localhost:8080
+QBITTORRENT_USER=admin
+QBITTORRENT_PASS=adminadmin
 ```
 
 Now you can run the development server:
@@ -50,27 +50,34 @@ npm run prod_start
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
 
-## Docker
+## Docker compose
 
-To build and run this project in a docker container, use the following commands:
+This project can be run as a pair of containerised services using `docker compose`.
 
-```bash
-docker build -t getflix .
-docker run -p 3000:3000 getflix
-```
+The [binhex-qbittorrentvpn container can be configured with different VPN providers](https://github.com/binhex/arch-qbittorrentvpn/tree/master?tab=readme-ov-file#usage), the current compose.yml file for Getflix assumes use of an OpenVPN provider.
 
-or use docker compose:
+1. Add your own VPN authentication credentials to the compose.yml file.
 
-```bash
-docker compose --build up
-```
+2. Create local `./.compose/data` and `./.compose/config` directories to store the qbittorrent data and configuration files. 
+    eg. To add a NordVPN OpenVPN configuration file, add the relevant file from https://nordvpn.com/ovpn/ to the `./.compose/config/openvpn/` directory.
 
-or use the Makefile:
+3. Build and run the container, use the following command:
 
 ```bash
-make build
-make run
+docker compose up --build
 ```
+
+4. Amend the QBittorrent WebUI password after the first time you run the container.
+Pay attention to the logged output and look for the line:
+
+```
+The WebUI administrator password was not set. A temporary password is provided for this session: <password>
+```
+
+5. Login to the WebUI at `http://localhost:8080` (username: admin and password from above) and set a new password. This should match the `QBITTORRENT_PASS` value in the compose.yml file.
+
+6. Restart containers. Getflix should be able to connect to the QBittorrent service and fetch search results and enqueue torrents to download.
+
 
 ## Learn More
 
